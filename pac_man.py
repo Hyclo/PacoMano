@@ -1,4 +1,5 @@
 import pygame
+from game_starter import *
 
 # Constants
 BLACK = (0, 0, 0)
