@@ -1,5 +1,5 @@
 import pygame
-from game_starter import *
+from game_starter import setup
 
 # Constants
 BLACK = (0, 0, 0)
@@ -7,6 +7,10 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+
+start_variables = setup()
+
+score = start_variables.get("score")
 
 # Game dimensions
 WIDTH = 640
@@ -26,7 +30,7 @@ ghost_speed = 1.0
 
 # Set random variabel
 gameOver = False
-score = 0
+
 
 def gameLoop(ghost_speed, score):
 
