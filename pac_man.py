@@ -1,7 +1,11 @@
 import pygame
 import sys
 import random
+
+# FILE IMPORTS START::
 from start_variables import setup
+from icon_factory import get_image
+# FILE IMPORTS END::
 
 # Constants
 BLACK = (0, 0, 0)
@@ -41,7 +45,7 @@ def set_up_ghosts(amount):
     # Set up the ghosts
     ghosts = []
     for i in range(amount):
-        ghost_image = pygame.image.load("ghost.png").convert()
+        ghost_image = get_image("ghost.png")
         ghost_rect = ghost_image.get_rect()
         ghost_rect.x = 580
         ghost_rect.y = 420
@@ -51,7 +55,7 @@ def set_up_ghosts(amount):
         
 def set_up_coins(amount):
     # Set up the dots
-    dot_image = pygame.image.load("dot.png").convert()
+    dot_image = get_image("dot.png")
     dot_image_width = 32
     dot_image_height = 32
     dots = []
@@ -73,7 +77,7 @@ def gameLoop(ghost_speed, score, is_game_over, is_loop_running):
     clock = pygame.time.Clock()
 
     # Set up the player
-    player_image = pygame.image.load("pacman.png").convert()
+    player_image = get_image("pacman.png")
     player_rect = player_image.get_rect()
 
     ghosts, ghost_image = set_up_ghosts(1)
