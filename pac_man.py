@@ -1,5 +1,6 @@
 import pygame
-from game_starter import *
+import sys
+from game_starter import setup
 
 # Constants
 BLACK = (0, 0, 0)
@@ -7,6 +8,10 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+
+start_variables = setup()
+
+score = start_variables.get("score")
 
 # Game dimensions
 WIDTH = 640
@@ -22,13 +27,21 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 font = pygame.font.Font(None, 36)
 
 # Set up ghost speed
-ghost_speed = 1.0
+ghost_speed = 0.0
+ghost_speedup = 0.0
 
 # Set random variabel
 gameOver = False
-score = 0
+running = True
 
-def gameLoop(ghost_speed, score):
+def exit():
+    pygame.quit()
+    sys.exit()
+
+
+def gameLoop(ghost_speed, score, gameOver, running):
+
+    lose = False
 
     # Set up the clock
     clock = pygame.time.Clock()
@@ -53,12 +66,12 @@ def gameLoop(ghost_speed, score):
         dots.append(dot)
 
     # Set up the game loop
-    running = True
-    while running:
+    
+    while running == True:
         # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                exit()
 
         # Move the player
         keys = pygame.key.get_pressed()
@@ -84,25 +97,6 @@ def gameLoop(ghost_speed, score):
         if ghost_rect.right > WIDTH:
             ghost_rect.left = 0
 
-        # Check for collisions
-        if player_rect.colliderect(ghost_rect):
-            print("You lose!")
-            running = False
-
-        # Check for dot collection
-        for dot in dots:
-            if player_rect.colliderect(dot):
-                dots.remove(dot)
-
-        # Check for win --------------------------------------------------------
-        if not dots:
-            print("You win!")
-            score += 1
-            print(score)
-            ghost_speed += 0.2
-            gameLoop(ghost_speed, score)
-            # running = False
-
         # Draw the screen
         screen.fill(BLACK)
         screen.blit(player_image, player_rect)
@@ -111,9 +105,36 @@ def gameLoop(ghost_speed, score):
             screen.blit(dot_image, dot)
         pygame.display.flip()
 
+        # Check for collisions
+        if player_rect.colliderect(ghost_rect):
+            lose = True
+            print("You lose!")
+            gameOver = True
+            pygame.quit()
+            sys.exit()
+            # running = False
+
+        # Check for dot collection
+        for dot in dots:
+            if player_rect.colliderect(dot):
+                dots.remove(dot)
+
+        # Check for win --------------------------------------------------------
+        if not dots:
+            if lose == False:
+                print("You win!")
+                score += 1
+                print(score)
+                ghost_speed += ghost_speedup
+                gameLoop(ghost_speed, score, gameOver, running)
+                # running = False
+
+        
+
         # Limit the frame rate
         clock.tick(60)
 if gameOver == False:
-    gameLoop(ghost_speed, score)
+    print("game has been restarted with the start function")
+    gameLoop(ghost_speed, score, gameOver, running)
 # Shut down Pygame
 pygame.quit()
